@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project (MiniExcelReader)
+project (MiniExcel)
 
 
 set(tinyxml2_src 
@@ -32,7 +32,7 @@ set(zlib_src
     zlib/zutil.c
 )
 
-file(GLOB MiniExcelReader_src *.cpp)
+file(GLOB MiniExcel_src *.cpp)
 
 set(libs tinyxml2 zlib minizip)
 
@@ -51,5 +51,5 @@ endforeach()
 include_directories(${libs})
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-add_executable(MiniExcelReader ${MiniExcelReader_src} ${libsrc})
+add_executable(MiniExcel ${MiniExcel_src} ${libsrc})
 
