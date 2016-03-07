@@ -13,9 +13,11 @@ int main(int argc, const char *argv[])
 
     FILE* file = fopen("../out.txt", "w");
 
-    for (int r = sh->dimension.firstRow; r <= sh->dimension.lastRow; r++)
+    const MiniExcelReader::Range& dim = sh->getDimension();
+
+    for (int r = dim.firstRow; r <= dim.lastRow; r++)
     {
-        for (int c = sh->dimension.firstCol; c <= sh->dimension.lastCol; c++)
+        for (int c = dim.firstCol; c <= dim.lastCol; c++)
         {
             MiniExcelReader::Cell* cell = sh->getCell(r, c);
 

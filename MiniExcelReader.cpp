@@ -115,15 +115,19 @@ bool Zip::openXML(const char* filename, tinyxml2::XMLDocument& doc)
 
 Cell* Sheet::getCell(int row, int col)
 {
-    if (row < dimension.firstRow || row > dimension.lastRow)
+    if (row < _dimension.firstRow || row > _dimension.lastRow)
         return nullptr;
-    if (col < dimension.firstCol || col > dimension.lastRow)
+    if (col < _dimension.firstCol || col > _dimension.lastRow)
         return nullptr;
 
-    int index = (row - dimension.firstRow + 1) * (col - dimension.firstCol + 1) - 1;
-    return _cells[index];
+    return _cells[toIndex(row, col)];
 }
 
+
+int Sheet::toIndex(int row, int col)
+{
+    return (row - 1) * (_dimension.lastCol - _dimension.firstCol + 1) + (col- _dimension.firstCol);
+}
 
 void ExcelFile::readWorkBook(const char* filename)
 {
@@ -140,10 +144,10 @@ void ExcelFile::readWorkBook(const char* filename)
     {
         Sheet s;
 
-        s.name = e->Attribute("name");
-        s.rid = e->Attribute("r:id");
-        s.sheetId = e->IntAttribute("sheetId");
-        s.visible = (e->Attribute("state") && !stricmp(e->Attribute("state"), "hidden"));
+        s._name = e->Attribute("name");
+        s._rid = e->Attribute("r:id");
+        s._sheetId = e->IntAttribute("sheetId");
+        s._visible = (e->Attribute("state") && !strcmp(e->Attribute("state"), "hidden"));
 
         e = e->NextSiblingElement("sheet");
 
@@ -165,9 +169,9 @@ void ExcelFile::readWorkBookRels(const char* filename)
 
         for (Sheet& sheet : _sheets)
         {
-            if (sheet.rid == rid)
+            if (sheet._rid == rid)
             {
-                sheet.path = "xl/" + std::string(e->Attribute("Target"));
+                sheet._path = "xl/" + std::string(e->Attribute("Target"));
                 
                 break;
             }
@@ -230,7 +234,7 @@ void ExcelFile::parseCell(const std::string& value, int& row, int& col)
 
     int arr[10];
 
-    while (index < value.length())
+    while (index < (int)value.length())
     {
         if (isdigit(value[index])) break;
         arr[index] = value[index] - 'A' + 1;
@@ -267,18 +271,18 @@ void ExcelFile::readSheet(Sheet& sh)
     tinyxml2::XMLDocument doc;
     tinyxml2::XMLElement *root, *row, *c, *v, *d;
 
-    _zip->openXML(sh.path.c_str(), doc);
+    _zip->openXML(sh._path.c_str(), doc);
 
     root = doc.FirstChildElement("worksheet");
         
     d = root->FirstChildElement("dimension");
     if (d)
-        parseRange(d->Attribute("ref"), sh.dimension);
+        parseRange(d->Attribute("ref"), sh._dimension);
 
     row = root->FirstChildElement("sheetData");
     row = row->FirstChildElement("row");
 
-    int vecsize = (sh.dimension.lastCol - sh.dimension.firstCol + 1) * (sh.dimension.lastRow - sh.dimension.firstRow + 1);
+    int vecsize = (sh._dimension.lastCol - sh._dimension.firstCol + 1) * (sh._dimension.lastRow - sh._dimension.firstRow + 1);
 
     sh._cells.resize(vecsize);
 
@@ -292,7 +296,7 @@ void ExcelFile::readSheet(Sheet& sh)
         {
             int colIdx = 0;
             parseCell(c->Attribute("r"), rowIdx, colIdx);
-            int index = (colIdx - sh.dimension.firstCol + 1) * (rowIdx - sh.dimension.firstRow + 1) - 1;
+            int index = sh.toIndex(rowIdx, colIdx);
             
             const char *s, *t;
 
@@ -353,7 +357,7 @@ Sheet* ExcelFile::getSheet(const char* name)
 {
     for (Sheet& sh : _sheets)
     {
-        if (sh.name == name)
+        if (sh._name == name)
             return &sh;
     }
 

@@ -19,22 +19,28 @@ namespace MiniExcelReader
         int lastCol;
     };
 
-    struct Sheet
+    class Sheet
     {
-        bool visible;
-
-        Range dimension;
-
-        std::string name;
-        std::string path;
+    public:
         
-        Cell* getCell(int row, int col);
+        bool visible() { return _visible; }
+        const std::string& getName() { return _name; }
+        Range& getDimension() { return _dimension; }
 
+        Cell* getCell(int row, int col);
     private:
         friend class ExcelFile;
 
-        int sheetId;
-        std::string rid;
+        int toIndex(int row, int col);
+
+        int _sheetId;
+        bool _visible;
+        Range _dimension;
+
+        std::string _rid;
+        std::string _path;
+        std::string _name;
+
         std::vector<Cell*> _cells;
     };
 

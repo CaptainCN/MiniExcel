@@ -32,7 +32,8 @@ set(zlib_src
     zlib/zutil.c
 )
 
-file(GLOB MiniExcel_src *.cpp)
+set(MiniExcel_src MiniExcelReader.cpp)
+set(MiniExcelLua_src LuaMiniExcel.cpp LuaMiniExcel.def)
 
 set(libs tinyxml2 zlib minizip)
 
@@ -51,5 +52,11 @@ endforeach()
 include_directories(${libs})
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-add_executable(MiniExcel ${MiniExcel_src} ${libsrc})
+add_executable(MiniExcelTest test.cpp ${MiniExcel_src} ${libsrc})
 
+if (BUILD_LUA)
+    find_package(Lua51 REQUIRED)
+    include_directories(${LUA_INCLUDE_DIR} ${libs})
+    add_library(miniexcel SHARED ${MiniExcel_src} ${MiniExcelLua_src} ${libsrc})
+    target_link_libraries(miniexcel ${LUA_LIBRARIES})  
+endif()
