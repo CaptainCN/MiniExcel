@@ -1,2 +1,4 @@
-# MiniExcelReader
-Mini Excel Reader for c++(Just .xlsx)
+# MiniExcel
+Mini Excel for c++ (currently just reader for .xlsx)
+
+MIT
