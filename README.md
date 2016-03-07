@@ -1,4 +1,5 @@
 # MiniExcel
-Mini Excel for c++ (currently just reader for .xlsx)
 
-MIT
+Mini Excel Reader(just .xlsx) for C++ & Lua
+
+license MIT
