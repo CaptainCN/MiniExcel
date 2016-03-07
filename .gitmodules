@@ -1,0 +1,9 @@
+[submodule "tinyxml2"]
+	path = tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
+[submodule "minizip"]
+	path = minizip
+	url = https://github.com/nmoinvaz/minizip.git
+[submodule "zlib"]
+	path = zlib
+	url = https://github.com/madler/zlib.git
