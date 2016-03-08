@@ -94,7 +94,7 @@ static int l_sheets(lua_State* L)
     {
         Sheet* sh = &sheets[i];
         newSheet(L, sh);
-        lua_insert(L, i);
+        lua_rawseti(L, -2, i+1);
     }
 
     return 1;

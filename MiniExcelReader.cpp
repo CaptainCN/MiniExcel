@@ -90,7 +90,6 @@ unsigned char* Zip::getFileData(const char* filename, unsigned long& size)
     pBuffer = new unsigned char[fileInfo.uncompressed_size];
     unzReadCurrentFile(_zipFile, pBuffer, fileInfo.uncompressed_size);
 
-    //CCAssert(nSize == 0 || nSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
     size = fileInfo.uncompressed_size;
     unzCloseCurrentFile(_zipFile);
 
@@ -112,6 +111,14 @@ bool Zip::openXML(const char* filename, tinyxml2::XMLDocument& doc)
     return true;
 }
 
+
+Sheet::~Sheet()
+{
+    for (unsigned i = 0; i < _cells.size(); i++)
+    {
+        delete _cells[i];
+    }
+}
 
 Cell* Sheet::getCell(int row, int col)
 {

@@ -2,24 +2,32 @@ local miniexcel = require "miniexcel"
 
 local x = miniexcel.open('1.xlsx')
 
-local sheet1 = x:getSheet('Sheet1')
+local sheets = x:sheets()
 
+print(type(sheets), #sheets)
 
-local f = io.open('outlua.txt', 'w')
+for i, sheet1 in ipairs(sheets) do
 
-local dim = sheet1:dimension();
+    local f = io.open(sheet1:name() .. '.txt', 'w')
+    print(sheet1:name())
 
-for r = dim.firstRow, dim.lastRow do
-    for c = dim.firstCol, dim.lastCol do
-            local cell = sheet1:cell(r, c)
+    local dim = sheet1:dimension();
 
-            local str = "."
-            if cell then
-                str = cell.value
-            end
+    for r = dim.firstRow, dim.lastRow do
+        local rowTable = {}
+        for c = dim.firstCol, dim.lastCol do
+                local cell = sheet1:cell(r, c)
 
-            f:write(str)
-            f:write("|")
+                local str = "."
+                if cell then
+                    str = cell.value
+                end
+
+                table.insert(rowTable, string.format("%30s", str))
+        end
+        f:write(table.concat(rowTable, '|') .. '\n')
     end
-    f:write('\n')
+
+    f:close()
 end
+

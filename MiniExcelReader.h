@@ -22,7 +22,8 @@ namespace MiniExcelReader
     class Sheet
     {
     public:
-        
+        ~Sheet();
+
         bool visible() { return _visible; }
         const std::string& getName() { return _name; }
         Range& getDimension() { return _dimension; }
