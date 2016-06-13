@@ -124,7 +124,7 @@ Cell* Sheet::getCell(int row, int col)
 {
     if (row < _dimension.firstRow || row > _dimension.lastRow)
         return nullptr;
-    if (col < _dimension.firstCol || col > _dimension.lastRow)
+    if (col < _dimension.firstCol || col > _dimension.lastCol)
         return nullptr;
 
     return _cells[toIndex(row, col)];
