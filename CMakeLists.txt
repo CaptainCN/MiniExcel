@@ -32,6 +32,8 @@ set(zlib_src
     zlib/zutil.c
 )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 set(MiniExcel_src MiniExcelReader.cpp)
 set(MiniExcelLua_src LuaMiniExcel.cpp LuaMiniExcel.def)
 
@@ -58,5 +60,12 @@ if (BUILD_LUA)
     find_package(Lua51 REQUIRED)
     include_directories(${LUA_INCLUDE_DIR} ${libs})
     add_library(miniexcel SHARED ${MiniExcel_src} ${MiniExcelLua_src} ${libsrc})
-    target_link_libraries(miniexcel ${LUA_LIBRARIES})  
+    target_link_libraries(miniexcel ${LUA_LIBRARIES}) 
+
+    if (APPLE)
+        set_property(TARGET miniexcel PROPERTY PREFIX "")
+        set_property(TARGET miniexcel PROPERTY OUTPUT_NAME "miniexcel.so")
+        set_property(TARGET miniexcel PROPERTY SUFFIX "")
+        set_property(TARGET miniexcel PROPERTY SOVERSION "32.1.2.0")
+    endif() 
 endif()

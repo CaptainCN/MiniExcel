@@ -207,7 +207,7 @@ static void newMetatable2(lua_State *L, const char* name, lua_CFunction f) {
     lua_setfield(L, -2, "__index");
 }
 
-LUA_API int luaopen_miniexcel(lua_State *L) {
+static int miniexcel_open(lua_State* L) {
     newMetatable2(L, MINI_EXCEL_CELL, cell_func);
     newMetatable2(L, MINI_EXCEL_RANGE, range_func);
     newMetatable1(L, MINI_EXCEL_SHEET, Sheet_functions);
@@ -218,5 +218,13 @@ LUA_API int luaopen_miniexcel(lua_State *L) {
     
     return 1;
 }
+
+extern "C"
+{
+LUA_API int luaopen_miniexcel(lua_State *L) {
+    return miniexcel_open(L);    
+} 
+}
+
 
 

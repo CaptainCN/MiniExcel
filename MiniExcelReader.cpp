@@ -4,6 +4,7 @@
 #include "tinyxml2.h"
 
 #include <stdio.h>
+#include <math.h>
 #include <string>
 #include <vector>
 #include <map>
